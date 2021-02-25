@@ -9,13 +9,13 @@ ENV YARN_VERSION 1.22.5
 # Common deps
 RUN apt-get update && \
     apt-get -y install build-essential \
-                       curl \
-                       git \
-                       gpg \
-                       python \
-                       wget \
-                       xz-utils \
-                       sudo \
+    curl \
+    git \
+    gpg \
+    python \
+    wget \
+    xz-utils \
+    sudo \
     && \
     apt-get clean && \
     apt-get autoremove -y && \
@@ -107,7 +107,7 @@ WORKDIR /home/theia
 ADD $version.package.json ./package.json
 
 RUN if [ "$strip" = "true" ]; then \
-yarn --pure-lockfile && \
+    yarn --pure-lockfile && \
     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && \
     yarn theia download:plugins && \
     yarn --production && \
@@ -117,10 +117,10 @@ yarn --pure-lockfile && \
     echo *.spec.* >> .yarnclean && \
     yarn autoclean --force && \
     yarn cache clean \
-;else \
-yarn --cache-folder ./ycache && rm -rf ./ycache && \
-     NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
-;fi
+    ;else \
+    yarn --cache-folder ./ycache && rm -rf ./ycache && \
+    NODE_OPTIONS="--max_old_space_size=4096" yarn theia build && yarn theia download:plugins \
+    ;fi
 
 FROM common
 
@@ -182,12 +182,12 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - && \
     echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main" > /etc/apt/sources.list.d/llvm.list && \
     apt-get update && \
     apt-get install -y \
-                       clang-tools-$LLVM \
-                       clangd-$LLVM \
-                       clang-tidy-$LLVM \
-                       gcc-multilib \
-                       g++-multilib \
-                       gdb && \
+    clang-tools-$LLVM \
+    clangd-$LLVM \
+    clang-tidy-$LLVM \
+    gcc-multilib \
+    g++-multilib \
+    gdb && \
     ln -s /usr/bin/clang-$LLVM /usr/bin/clang && \
     ln -s /usr/bin/clang++-$LLVM /usr/bin/clang++ && \
     ln -s /usr/bin/clang-cl-$LLVM /usr/bin/clang-cl && \
@@ -236,8 +236,8 @@ RUN apt-get update \
     && apt-get install -y curl php$PHP_VERSION php$PHP_VERSION-cli php$PHP_VERSION-mbstring unzip php$PHP_VERSION-common php$PHP_VERSION-json php-yaml php-xdebug \
     && apt-get remove -y software-properties-common
 RUN echo '[XDebug]\n\
-xdebug.remote_enable = 1\n\
-xdebug.remote_autostart = 1' >> /etc/php/$PHP_VERSION/mods-available/xdebug.ini
+    xdebug.remote_enable = 1\n\
+    xdebug.remote_autostart = 1' >> /etc/php/$PHP_VERSION/mods-available/xdebug.ini
 RUN curl -s -o composer-setup.php https://getcomposer.org/installer \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && rm composer-setup.php
@@ -255,12 +255,12 @@ RUN apt-get update \
     && curl -SLO https://swift.org/builds/swift-$SWIFT_VERSION-release/ubuntu1804/swift-$SWIFT_VERSION-RELEASE/swift-$SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz.sig \
     && wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import - \
     && (    gpg --keyserver pool.sks-keyservers.net --refresh-keys Swift \
-         || gpg --keyserver ipv4.pool.sks-keyservers.net --refresh-keys Swift \
-         || gpg --keyserver pool.sks-keyservers.net --refresh-keys Swift \
-         || gpg --keyserver pgp.mit.edu --refresh-keys Swift \
-         || gpg --keyserver keyserver.pgp.com --refresh-keys Swift \
-         || gpg --keyserver ha.pool.sks-keyservers.net --refresh-keys Swift \
-       ) \
+    || gpg --keyserver ipv4.pool.sks-keyservers.net --refresh-keys Swift \
+    || gpg --keyserver pool.sks-keyservers.net --refresh-keys Swift \
+    || gpg --keyserver pgp.mit.edu --refresh-keys Swift \
+    || gpg --keyserver keyserver.pgp.com --refresh-keys Swift \
+    || gpg --keyserver ha.pool.sks-keyservers.net --refresh-keys Swift \
+    ) \
     && gpg --verify swift-$SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz.sig \
     && tar fxz swift-$SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz \
     && rm swift-$SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz swift-$SWIFT_VERSION-RELEASE-ubuntu18.04.tar.gz.sig \
@@ -273,13 +273,13 @@ RUN apt-get update \
 ENV DART_VERSION 2.9.0
 
 RUN \
-  apt-get update && apt-get install --no-install-recommends -y -q gnupg2 curl git ca-certificates apt-transport-https openssh-client && \
-  curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-  curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list && \
-  curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_testing.list > /etc/apt/sources.list.d/dart_testing.list && \
-  curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_unstable.list > /etc/apt/sources.list.d/dart_unstable.list && \
-  apt-get update && \
-  apt-get install dart=$DART_VERSION-1
+    apt-get update && apt-get install --no-install-recommends -y -q gnupg2 curl git ca-certificates apt-transport-https openssh-client && \
+    curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_stable.list > /etc/apt/sources.list.d/dart_stable.list && \
+    curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_testing.list > /etc/apt/sources.list.d/dart_testing.list && \
+    curl https://storage.googleapis.com/download.dartlang.org/linux/debian/dart_unstable.list > /etc/apt/sources.list.d/dart_unstable.list && \
+    apt-get update && \
+    apt-get install dart=$DART_VERSION-1
 
 ENV DART_SDK /usr/lib/dart
 ENV PATH $DART_SDK/bin:/theia/.pub-cache/bin:$PATH
@@ -303,10 +303,10 @@ RUN chmod g+rw /home && \
 # Theia application
 ## Needed for node-gyp, nsfw build
 RUN apt-get clean && \
-  apt-get autoremove -y && \
-  rm -rf /var/cache/apt/* && \
-  rm -rf /var/lib/apt/lists/* && \
-  rm -rf /tmp/*
+    apt-get autoremove -y && \
+    rm -rf /var/cache/apt/* && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/*
 
 # Change permissions to make the `yang-language-server` executable.
 RUN chmod +x ./plugins/yangster/extension/server/bin/yang-language-server
@@ -321,5 +321,10 @@ ENV SHELL=/bin/bash \
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+
+# if [ x"${PATH}" = "x" ]; then export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; fi
+# if [ x"${PATH: -1}" = "x:" ]; then export PATH=${PATH/%:/}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; fi
+
+RUN sudo touch /etc/bash.bashrc && sudo sed -i '2i\if [ x"${PATH}" = "x" ]; then export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; fi\nif [ x"${PATH: -1}" = "x:" ]; then export PATH=${PATH/%:/}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin; fi' /etc/bash.bashrc
 
 ENTRYPOINT [ "node", "/home/theia/src-gen/backend/main.js", "/home/project", "--hostname=0.0.0.0" ]
